@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css" />
+        <link rel="stylesheet" type="text/css" href="css/qgis2web.css">
+        <link rel="stylesheet" href="css/label.css" />
+        <link rel="stylesheet" href="css/MarkerCluster.css" />
+        <link rel="stylesheet" href="css/MarkerCluster.Default.css" />
+        <link rel="stylesheet" href="css/leaflet-search.css" />
+        <script src="js/leaflet.js"></script>
+        <script src="js/leaflet-heat.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/OSMBuildings-Leaflet.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/label.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/leaflet.markercluster.js"></script>
+        <script src="js/leaflet-search.js"></script>
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <title></title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="data/json_RegionAntofagasta0.js"></script>
+        <script src="data/json_AtractivosTuristicos1.js"></script>
+        <script src="data/json_InfraestructuraVial2.js"></script>
+        <script src="data/json_LineasTransmisionElectrica3.js"></script>
+        <script src="data/json_Lugares4.js"></script>
+        <script src="data/json_SubestacionesElectricas5.js"></script>
+        <script>
+        L.ImageOverlay.include({
+            getBounds: function () {
+                return this._bounds;
+            }
+        });
+        var map = L.map('map', {
+            zoomControl:true, maxZoom:28, minZoom:1
+        }).fitBounds([[-26.1391996751,-73.0829468657],[-20.7510019976,-64.7693071644]]);
+        var hash = new L.Hash(map);
+        map.attributionControl.addAttribution('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a>');
+        var feature_group = new L.featureGroup([]);
+        var bounds_group = new L.featureGroup([]);
+        var raster_group = new L.LayerGroup([]);
+        var initialOrder = new Array();
+        var layerOrder = new Array();
+        function stackLayers() {
+            for (index = 0; index < initialOrder.length; index++) {
+                map.removeLayer(initialOrder[index]);
+                map.addLayer(initialOrder[index]);
+            }
+        }
+        function restackLayers() {
+            for (index = 0; index < layerOrder.length; index++) {
+                layerOrder[index].bringToFront();
+            }
+        }
+        layerControl = L.control.layers({},{},{collapsed:false});
+        function geoJson2heat(geojson, weight) {
+          return geojson.features.map(function(feature) {
+            return [
+              feature.geometry.coordinates[1],
+              feature.geometry.coordinates[0],
+              feature.properties[weight]
+            ];
+          });
+        }
+        function pop_RegionAntofagasta0(feature, layer) {
+            var popupContent = '<table><tr><td colspan="2">' + (feature.properties['OBJECTID'] !== null ? Autolinker.link(String(feature.properties['OBJECTID'])) : '') + '</td></tr><tr><td colspan="2">' + (feature.properties['AREA'] !== null ? Autolinker.link(String(feature.properties['AREA'])) : '') + '</td></tr><tr><td colspan="2">' + (feature.properties['REGION'] !== null ? Autolinker.link(String(feature.properties['REGION'])) : '') + '</td></tr><tr><td colspan="2">' + (feature.properties['PROVINCIA'] !== null ? Autolinker.link(String(feature.properties['PROVINCIA'])) : '') + '</td></tr><tr><td colspan="2">' + (feature.properties['COMUNA'] !== null ? Autolinker.link(String(feature.properties['COMUNA'])) : '') + '</td></tr><tr><td colspan="2">' + (feature.properties['Shape_Leng'] !== null ? Autolinker.link(String(feature.properties['Shape_Leng'])) : '') + '</td></tr><tr><td colspan="2">' + (feature.properties['Shape_Area'] !== null ? Autolinker.link(String(feature.properties['Shape_Area'])) : '') + '</td></tr></table>';
+            layer.bindPopup(popupContent);
+        }
+
+        function doStyleRegionAntofagasta0(feature) {
+            return {
+                weight: 1.04,
+                color: '#000000',
+                fillColor: '#688b63',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                opacity: 1.0,
+                fillOpacity: 1.0
+            };
+        }
+        var json_RegionAntofagasta0JSON = new L.geoJson(json_RegionAntofagasta0, {
+            onEachFeature: pop_RegionAntofagasta0,
+            style: doStyleRegionAntofagasta0
+        });
+        layerOrder[layerOrder.length] = json_RegionAntofagasta0JSON;
+        bounds_group.addLayer(json_RegionAntofagasta0JSON);
+        initialOrder[initialOrder.length] = json_RegionAntofagasta0JSON;
+        feature_group.addLayer(json_RegionAntofagasta0JSON);
+        function pop_AtractivosTuristicos1(feature, layer) {
+            var popupContent = '<table><tr><td colspan="2">' + (feature.properties['CODATRAC'] !== null ? Autolinker.link(String(feature.properties['CODATRAC'])) : '') + '</td></tr><tr><td colspan="2">' + (feature.properties['NOMBRE'] !== null ? Autolinker.link(String(feature.properties['NOMBRE'])) : '') + '</td></tr></table>';
+            layer.bindPopup(popupContent);
+        }
+
+        function doStyleAtractivosTuristicos1() {
+            return {
+                radius: 4.0,
+                fillColor: '#af640d',
+                color: '#000000',
+                weight: 0.0,
+                opacity: 1.0,
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                fillOpacity: 1.0
+            }
+        }
+        function doPointToLayerAtractivosTuristicos1(feature, latlng) {
+            return L.circleMarker(latlng, doStyleAtractivosTuristicos1())
+        }
+        var json_AtractivosTuristicos1JSON = new L.geoJson(json_AtractivosTuristicos1, {
+            onEachFeature: pop_AtractivosTuristicos1, 
+            pointToLayer: doPointToLayerAtractivosTuristicos1
+            });
+        layerOrder[layerOrder.length] = json_AtractivosTuristicos1JSON;
+
+        bounds_group.addLayer(json_AtractivosTuristicos1JSON);
+        initialOrder[initialOrder.length] = json_AtractivosTuristicos1JSON;
+        feature_group.addLayer(json_AtractivosTuristicos1JSON);
+        function pop_InfraestructuraVial2(feature, layer) {
+            var popupContent = '<table><tr><td colspan="2">' + (feature.properties['OBJECTID'] !== null ? Autolinker.link(String(feature.properties['OBJECTID'])) : '') + '</td></tr><tr><td colspan="2">' + (feature.properties['Id'] !== null ? Autolinker.link(String(feature.properties['Id'])) : '') + '</td></tr><tr><td colspan="2">' + (feature.properties['ROL'] !== null ? Autolinker.link(String(feature.properties['ROL'])) : '') + '</td></tr><tr><td colspan="2">' + (feature.properties['CODIGO'] !== null ? Autolinker.link(String(feature.properties['CODIGO'])) : '') + '</td></tr><tr><td colspan="2">' + (feature.properties['NOMBRE'] !== null ? Autolinker.link(String(feature.properties['NOMBRE'])) : '') + '</td></tr><tr><td colspan="2">' + (feature.properties['CARPETA'] !== null ? Autolinker.link(String(feature.properties['CARPETA'])) : '') + '</td></tr><tr><td colspan="2">' + (feature.properties['REGION'] !== null ? Autolinker.link(String(feature.properties['REGION'])) : '') + '</td></tr><tr><td colspan="2">' + (feature.properties['NOM_REGION'] !== null ? Autolinker.link(String(feature.properties['NOM_REGION'])) : '') + '</td></tr><tr><td colspan="2">' + (feature.properties['Shape_Leng'] !== null ? Autolinker.link(String(feature.properties['Shape_Leng'])) : '') + '</td></tr></table>';
+            layer.bindPopup(popupContent);
+        }
+
+        function doStyleInfraestructuraVial2(feature) {
+            return {
+                weight: 1.04,
+                color: '#68a0f4',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                opacity: 1.0
+            };
+        }
+        var json_InfraestructuraVial2JSON = new L.geoJson(json_InfraestructuraVial2, {
+            onEachFeature: pop_InfraestructuraVial2,
+            style: doStyleInfraestructuraVial2
+        });
+        layerOrder[layerOrder.length] = json_InfraestructuraVial2JSON;
+        bounds_group.addLayer(json_InfraestructuraVial2JSON);
+        initialOrder[initialOrder.length] = json_InfraestructuraVial2JSON;
+        feature_group.addLayer(json_InfraestructuraVial2JSON);
+        function pop_LineasTransmisionElectrica3(feature, layer) {
+            var popupContent = '<table><tr><td colspan="2">' + (feature.properties['OBJECTID'] !== null ? Autolinker.link(String(feature.properties['OBJECTID'])) : '') + '</td></tr><tr><td colspan="2">' + (feature.properties['TRAMO'] !== null ? Autolinker.link(String(feature.properties['TRAMO'])) : '') + '</td></tr><tr><td colspan="2">' + (feature.properties['PROPIETARI'] !== null ? Autolinker.link(String(feature.properties['PROPIETARI'])) : '') + '</td></tr><tr><td colspan="2">' + (feature.properties['SIST_ELEC'] !== null ? Autolinker.link(String(feature.properties['SIST_ELEC'])) : '') + '</td></tr><tr><td colspan="2">' + (feature.properties['ESTADO'] !== null ? Autolinker.link(String(feature.properties['ESTADO'])) : '') + '</td></tr><tr><td colspan="2">' + (feature.properties['RCA'] !== null ? Autolinker.link(String(feature.properties['RCA'])) : '') + '</td></tr><tr><td colspan="2">' + (feature.properties['ANNO_OPER'] !== null ? Autolinker.link(String(feature.properties['ANNO_OPER'])) : '') + '</td></tr><tr><td colspan="2">' + (feature.properties['Shape_Leng'] !== null ? Autolinker.link(String(feature.properties['Shape_Leng'])) : '') + '</td></tr></table>';
+            layer.bindPopup(popupContent);
+        }
+
+        function doStyleLineasTransmisionElectrica3(feature) {
+            return {
+                weight: 1.04,
+                color: '#d47fd4',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                opacity: 1.0
+            };
+        }
+        var json_LineasTransmisionElectrica3JSON = new L.geoJson(json_LineasTransmisionElectrica3, {
+            onEachFeature: pop_LineasTransmisionElectrica3,
+            style: doStyleLineasTransmisionElectrica3
+        });
+        layerOrder[layerOrder.length] = json_LineasTransmisionElectrica3JSON;
+        bounds_group.addLayer(json_LineasTransmisionElectrica3JSON);
+        initialOrder[initialOrder.length] = json_LineasTransmisionElectrica3JSON;
+        feature_group.addLayer(json_LineasTransmisionElectrica3JSON);
+        function pop_Lugares4(feature, layer) {
+            var popupContent = '<table><tr><td colspan="2">' + (feature.properties['OBJECTID'] !== null ? Autolinker.link(String(feature.properties['OBJECTID'])) : '') + '</td></tr><tr><td colspan="2">' + (feature.properties['POBLADO_'] !== null ? Autolinker.link(String(feature.properties['POBLADO_'])) : '') + '</td></tr><tr><td colspan="2">' + (feature.properties['POBLADO_ID'] !== null ? Autolinker.link(String(feature.properties['POBLADO_ID'])) : '') + '</td></tr><tr><td colspan="2">' + (feature.properties['TIPO'] !== null ? Autolinker.link(String(feature.properties['TIPO'])) : '') + '</td></tr><tr><td colspan="2">' + (feature.properties['NOMBRE'] !== null ? Autolinker.link(String(feature.properties['NOMBRE'])) : '') + '</td></tr><tr><td colspan="2">' + (feature.properties['HABITANTES'] !== null ? Autolinker.link(String(feature.properties['HABITANTES'])) : '') + '</td></tr><tr><td colspan="2">' + (feature.properties['CODIGO'] !== null ? Autolinker.link(String(feature.properties['CODIGO'])) : '') + '</td></tr><tr><td colspan="2">' + (feature.properties['DESCRIP'] !== null ? Autolinker.link(String(feature.properties['DESCRIP'])) : '') + '</td></tr><tr><td colspan="2">' + (feature.properties['REGION'] !== null ? Autolinker.link(String(feature.properties['REGION'])) : '') + '</td></tr><tr><td colspan="2">' + (feature.properties['SYMBOL'] !== null ? Autolinker.link(String(feature.properties['SYMBOL'])) : '') + '</td></tr><tr><td colspan="2">' + (feature.properties['DXF_LAYER'] !== null ? Autolinker.link(String(feature.properties['DXF_LAYER'])) : '') + '</td></tr><tr><td colspan="2">' + (feature.properties['DXF_COLOR'] !== null ? Autolinker.link(String(feature.properties['DXF_COLOR'])) : '') + '</td></tr></table>';
+            layer.bindPopup(popupContent);
+        }
+
+        function doStyleLugares4() {
+            return {
+                radius: 4.0,
+                fillColor: '#b6f666',
+                color: '#000000',
+                weight: 0.0,
+                opacity: 1.0,
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                fillOpacity: 1.0
+            }
+        }
+        function doPointToLayerLugares4(feature, latlng) {
+            return L.circleMarker(latlng, doStyleLugares4())
+        }
+        var json_Lugares4JSON = new L.geoJson(json_Lugares4, {
+            onEachFeature: pop_Lugares4, 
+            pointToLayer: doPointToLayerLugares4
+            });
+        layerOrder[layerOrder.length] = json_Lugares4JSON;
+
+        bounds_group.addLayer(json_Lugares4JSON);
+        initialOrder[initialOrder.length] = json_Lugares4JSON;
+        feature_group.addLayer(json_Lugares4JSON);
+        function pop_SubestacionesElectricas5(feature, layer) {
+            var popupContent = '<table><tr><td colspan="2">' + (feature.properties['OBJECTID'] !== null ? Autolinker.link(String(feature.properties['OBJECTID'])) : '') + '</td></tr><tr><th scope="row">NOMBRE</th><td>' + (feature.properties['NOMBRE'] !== null ? Autolinker.link(String(feature.properties['NOMBRE'])) : '') + '</td></tr><tr><th scope="row">RA_VOLT_KV</th><td>' + (feature.properties['RA_VOLT_KV'] !== null ? Autolinker.link(String(feature.properties['RA_VOLT_KV'])) : '') + '</td></tr><tr><th scope="row">PROPIETARI</th><td>' + (feature.properties['PROPIETARI'] !== null ? Autolinker.link(String(feature.properties['PROPIETARI'])) : '') + '</td></tr><tr><td colspan="2">' + (feature.properties['SIST_ELEC'] !== null ? Autolinker.link(String(feature.properties['SIST_ELEC'])) : '') + '</td></tr><tr><td colspan="2">' + (feature.properties['ESTADO'] !== null ? Autolinker.link(String(feature.properties['ESTADO'])) : '') + '</td></tr><tr><td colspan="2">' + (feature.properties['RCA'] !== null ? Autolinker.link(String(feature.properties['RCA'])) : '') + '</td></tr><tr><td colspan="2">' + (feature.properties['REGION'] !== null ? Autolinker.link(String(feature.properties['REGION'])) : '') + '</td></tr><tr><td colspan="2">' + (feature.properties['PROVINCIA'] !== null ? Autolinker.link(String(feature.properties['PROVINCIA'])) : '') + '</td></tr><tr><td colspan="2">' + (feature.properties['COMUNA'] !== null ? Autolinker.link(String(feature.properties['COMUNA'])) : '') + '</td></tr></table>';
+            layer.bindPopup(popupContent);
+        }
+
+        function doStyleSubestacionesElectricas5() {
+            return {
+                radius: 4.0,
+                fillColor: '#8eeda4',
+                color: '#000000',
+                weight: 0.0,
+                opacity: 1.0,
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                fillOpacity: 1.0
+            }
+        }
+        function doPointToLayerSubestacionesElectricas5(feature, latlng) {
+            return L.circleMarker(latlng, doStyleSubestacionesElectricas5())
+        }
+        var json_SubestacionesElectricas5JSON = new L.geoJson(json_SubestacionesElectricas5, {
+            onEachFeature: pop_SubestacionesElectricas5, 
+            pointToLayer: doPointToLayerSubestacionesElectricas5
+            });
+        layerOrder[layerOrder.length] = json_SubestacionesElectricas5JSON;
+
+        bounds_group.addLayer(json_SubestacionesElectricas5JSON);
+        initialOrder[initialOrder.length] = json_SubestacionesElectricas5JSON;
+        feature_group.addLayer(json_SubestacionesElectricas5JSON);
+        raster_group.addTo(map);
+        feature_group.addTo(map);
+        stackLayers();
+        map.addControl(new L.Control.Search({
+            layer: feature_group,
+            initial: false,
+            hideMarkerOnCollapse: true,
+            propertyName: 'NOMBRE'}));
+        map.on('overlayadd', restackLayers);
+        </script>
+    </body>
+</html>
